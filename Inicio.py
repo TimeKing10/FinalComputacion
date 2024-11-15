@@ -60,7 +60,13 @@ if uploaded_file is not None:
         df1 = df1.set_index('Time')
 
         # Create tabs for different analyses
-        tab1, tab2, tab3, tab4 = st.tabs(["📈 Visualización", "📊 Estadísticas", "🔍 Filtros", "🗺️ Información del Sitio"])
+        tab1, tab2, tab3, tab4, tab5 = st.tabs([
+            "📈 Visualización", 
+            "📊 Estadísticas", 
+            "🔍 Filtros", 
+            "🗺️ Información del Sitio", 
+            "🔄 Comparación de Variables"
+        ])
 
         with tab1:
             st.subheader('Visualización de Datos')
@@ -205,6 +211,26 @@ if uploaded_file is not None:
                 st.write("  * Humedad (%)")
                 st.write("- Frecuencia de medición: Según configuración")
                 st.write("- Ubicación: Campus universitario")
+
+        with tab5:
+            st.subheader("Comparación de Variables")
+
+            # Seleccionar el tipo de gráfico para la comparación
+            comparison_chart_type = st.selectbox(
+                "Seleccione tipo de gráfico para la comparación",
+                ["Línea", "Área"]
+            )
+
+            # Graficar temperatura y humedad en la misma gráfica
+            st.write("### Temperatura y Humedad")
+            if comparison_chart_type == "Línea":
+                st.line_chart(df1[["temperatura", "humedad"]])
+            else:
+                st.area_chart(df1[["temperatura", "humedad"]])
+
+            # Mostrar datos crudos de ambas variables si se selecciona
+            if st.checkbox('Mostrar datos crudos de ambas variables'):
+                st.write(df1[["temperatura", "humedad"]])
 
     except Exception as e:
         st.error(f'Error al procesar el archivo: {str(e)}')
